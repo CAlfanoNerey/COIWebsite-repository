@@ -12,6 +12,9 @@ from .models import Choice, Question
 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
+def login_redirect(request):
+    return redirect('/accounts/')
+
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'

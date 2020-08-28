@@ -1,7 +1,8 @@
 from django import forms
 from django.core.validators import MaxValueValidator
 
-from .models import Requesters
+from .models import Requesters, Recipient
+
 
 
 class RequesterForm(forms.ModelForm):
@@ -12,4 +13,13 @@ class RequesterForm(forms.ModelForm):
     # fax = forms.IntegerField(required=False)
     class Meta:
         model = Requesters
-        fields = ('user', 'address_line1', 'address_line2', 'city', 'zipcode', 'fax')
+        exclude = ['user']
+        fields = ('__all__')
+
+class RecipientForm(forms.ModelForm):
+
+    class Meta:
+        model = Recipient
+        exclude = ['user']
+        fields = ('__all__') #('user', 'name', 'address_line1', 'address_line2', 'city','state','email', 'zipcode', 'fax')
+
