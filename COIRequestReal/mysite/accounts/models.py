@@ -17,15 +17,16 @@ TITLE_STATES = [
 
 ]
 
-class Requesters(models.Model):
-    user = models.OneToOneField('auth.User', on_delete=models.CASCADE, default='')
+class Requester(models.Model):
+    user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
 
-    address_line1 = models.CharField(max_length=200, default='')
-    address_line2 = models.CharField(blank=True, null=True, max_length=200, default='')
+    address_line1 = models.CharField(max_length=200)
+    address_line2 = models.CharField(blank=True, null=True, max_length=200)
     # state = models.ForeignKey('States', null=True, blank=True)
-    city = models.CharField(default='', max_length=200)
-    state_or_territory = models.CharField(max_length=40, choices=TITLE_STATES, default='')
-    zipcode = models.PositiveIntegerField(blank =True, null=True, validators=[MaxValueValidator(99999)])
+    city = models.CharField(max_length=200)
+    state_or_territory = models.CharField(max_length=40, choices=TITLE_STATES)
+    #zipcode = models.PositiveIntegerField(blank =True, null=True, validators=[MaxValueValidator(99999)])
+    zipcode = models.PositiveIntegerField(validators=[MaxValueValidator(99999)])
     fax = models.IntegerField(blank=True, null=True)
 
 
@@ -55,7 +56,7 @@ class Recipient(models.Model):
 def create_profile(sender, **kwargs):
     if kwargs['created']:
         user_profile = UserProfile.objects.create(user=kwargs['instance'])
-        user = Requesters.objects.create(user=kwargs['instance'])
+        #user = Requesters.objects.create(user=kwargs['instance'])
 
 
 post_save.connect(create_profile, sender=User)

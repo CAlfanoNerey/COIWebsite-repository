@@ -21,7 +21,8 @@ urlpatterns = [
     path('requester/', views.requesterView, name='requester_url'),
     path('profile/', views.profile, name='profile'),
     path('recipient/', views.recipientView, name='recipient'),
-    # path('requesterupdate/', views.RequesterUpdate.as_view(), name='requesterupdate')
+
+    path('requesterupdate/', views.RequesterUpdate.as_view(), name='requesterupdate'),
 
     # path(
     #     'login/',

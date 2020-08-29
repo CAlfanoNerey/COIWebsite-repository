@@ -12,13 +12,17 @@ from .models import Choice, Question
 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
+
 def login_redirect(request):
     return redirect('/accounts/')
 
 
-class IndexView(generic.ListView):
-    template_name = 'polls/index.html'
-    context_object_name = 'latest_question_list'
+def IndexView(request):
+    return redirect('/accounts/')
+
+    # class IndexView(generic.ListView):
+    #     template_name = 'polls/index.html'
+    #     context_object_name = 'latest_question_list'
 
     def get_queryset(self):
         """Return the last five published questions.
@@ -66,4 +70,3 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
-

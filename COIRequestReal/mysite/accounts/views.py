@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from .forms import RequesterForm, RecipientForm
+from django.urls import reverse
+
+from .forms import RequesterForm, RecipientForm, RegistrationForm
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView
-from .models import Recipient, Requesters
+from .models import Recipient, Requester
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 
 
 # Create your views here.
@@ -25,12 +28,12 @@ def logoutview(request):
 
 def registerView(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('login_url')
     else:
-        form = UserCreationForm()
+        form = RegistrationForm()
     return render(request, 'registration/register.html', {'form': form})
 
 
@@ -85,11 +88,13 @@ def recipientView(request ):
         form = RecipientForm()
     return render(request, 'recipient.html', {'form': form}, )
 
-# class RequesterUpdate(UpdateView):
-#     model = Requesters
-#     fields = '__all__'
-#     template_name_suffix = '_update_form'
-#     form = RecipientForm(request.POST)
-#     form.instance.user = request.user
-#     def get_object(self):
-#         return get_object_or_404(Requesters, pk=self.request.user.id)
+
+
+class RequesterUpdate(UpdateView):
+    model = Requester
+    form_class = RequesterForm
+    template_name = "requester_update_form.html"
+
+    def getobject(self, *args, **kwargs):
+        user_ = self.request.user
+        return get_object_or_404(Requester, user=user_)

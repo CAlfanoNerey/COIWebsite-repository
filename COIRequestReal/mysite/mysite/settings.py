@@ -128,9 +128,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 # STATICFILES_DIRS = [
-#     "mysite\polls\static\polls\style.css",
+#     "mysite\accounts\static\accounts\style.css",
 #
-# ]
+#  ]
 ALLOWED_HOSTS = ['*']
-LOGIN_REDIRECT_URL = '/accounts/dashboard'
+LOGIN_REDIRECT_URL = '/accounts/'
 LOGOUT_REDIRECT_URL = ''
