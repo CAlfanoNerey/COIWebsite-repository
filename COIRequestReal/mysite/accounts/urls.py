@@ -19,10 +19,13 @@ urlpatterns = [
 
     path('register/requester/', views.requesterView, name='requester_url'),
     path('requester/', views.requesterView, name='requester_url'),
-    path('profile/', views.profile, name='profile'),
+    path('<int:pk>/profile/', views.view_profile.as_view(), name='view_profile'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
+
     path('recipient/', views.recipientView, name='recipient'),
 
-    path('requesterupdate/', views.RequesterUpdate.as_view(), name='requesterupdate'),
+    path('<int:pk>/requesterupdate', views.RequesterUpdate.as_view(), name='requesterupdate'),
+    path('profile/edit/', views.edit_profile)
 
     # path(
     #     'login/',

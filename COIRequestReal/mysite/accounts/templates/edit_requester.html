@@ -2,7 +2,7 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<h1>Requester Update Form</h1>
+<h1>Requester Update Form {{user}}</h1>
 <form method="POST">
     {% csrf_token %}
 

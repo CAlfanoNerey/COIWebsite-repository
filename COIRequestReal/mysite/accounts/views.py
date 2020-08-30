@@ -2,14 +2,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.views import generic
+from django.views.generic import ListView
 
 from .forms import RequesterForm, RecipientForm, RegistrationForm
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView
-from .models import Recipient, Requester
-from django.contrib.auth.models import User
+from .models import Recipient, Requester, User
+
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.forms import UserChangeForm
 
 
 # Create your views here.
@@ -29,11 +32,16 @@ def logoutview(request):
 def registerView(request):
     if request.method == "POST":
         form = RegistrationForm(request.POST)
+
         if form.is_valid():
-            form.save()
+            user = form.save()
+            user.set_password(user.password)
+            user.save()
+
             return redirect('login_url')
     else:
         form = RegistrationForm()
+
     return render(request, 'registration/register.html', {'form': form})
 
 
@@ -59,9 +67,26 @@ def requesterView(request):
     return render(request, 'requester.html', {'form': form}, )
 
 
-def profile(request):
-    args = {'user': request.user}
-    return render(request, 'profile.html', args)
+# def view_profile(request):
+#     args = {'user': request.user}
+#     return render(request, 'profile.html', args)
+
+class view_profile(generic.DetailView):
+    model = Requester
+    template_name = 'profile.html'
+
+
+def edit_profile(request):
+    if request.method == 'POST':
+        form = UserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('view_profile')
+
+    else:
+        form = UserChangeForm(instance=request.user)
+        args= {'form': form}
+        return render(request, 'edit_profile.html', args)
 
 
 
@@ -91,10 +116,11 @@ def recipientView(request ):
 
 
 class RequesterUpdate(UpdateView):
-    model = Requester
-    form_class = RequesterForm
-    template_name = "requester_update_form.html"
+    model = User
+    form_class = RegistrationForm
+    template_name = "edit_requester.html"
+    success_url = 'profile'
 
     def getobject(self, *args, **kwargs):
         user_ = self.request.user
-        return get_object_or_404(Requester, user=user_)
+        return get_object_or_404(User, user=user_)
