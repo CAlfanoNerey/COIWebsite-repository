@@ -1,5 +1,6 @@
 from django import forms
 #from django.contrib.auth import models
+from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, UserCreationForm
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator
 
@@ -18,16 +19,24 @@ TITLE_STATES = [
 
 ]
 
-class RegistrationForm(forms.ModelForm):
+class RegisterUpdateForm(UserChangeForm):
+
+    class Meta:
+        model = User
+        exclude= ['last_login', 'is_superuser', 'is_staff', 'is_active', 'user_permissions', 'date_joined', 'groups','password']
+        fields = '__all__'
+
+
+class RegistrationForm(UserCreationForm):
     email = forms.EmailField(required = True)
-    error_messages = {
-        'password_mismatch': ("The two password fields didn't match."),
-    }
-    password1 = forms.CharField(label=("Password"),
-                                widget=forms.PasswordInput)
-    password2 = forms.CharField(label=("Password confirmation"),
-                                widget=forms.PasswordInput,
-                                help_text=("Enter the same password as above, for verification."))
+    # error_messages = {
+    #     'password_mismatch': "The two password fields didn't match.",
+    # }
+    # password1 = forms.CharField(label="Password",
+    #                             widget=forms.PasswordInput)
+    # password2 = forms.CharField(label="Password confirmation",
+    #                             widget=forms.PasswordInput,
+    #                             help_text="Enter the same password as above, for verification.")
 
     # name = forms.CharField(max_length=200)
     # address_line1 = forms.CharField(max_length=200)
@@ -41,34 +50,28 @@ class RegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = (
-            'username',
-            #'name',
-            'first_name',
-            'last_name',
-            'email',
-            'address_line1',
-            'address_line2',
-            'city',
-            'state_or_territory',
-            'zipcode',
-            'fax'
-
-        )
+        exclude = ['last_login', 'is_superuser', 'is_staff', 'is_active', 'user_permissions', 'date_joined', 'groups','password']
+        fields = ('__all__')
 
 
-        def save(self, commit = True):
-            user = super(RegistrationForm, self).save(commit=False)
-            user.first_name = cleaned_data['first_name']
-            user.first_name = cleaned_data['last_name']
-            user.email = cleaned_data['email']
+            # 'name',
+            # 'first_name',
+            # 'last_name',
+            # 'email',
+            # 'address_line1',
+            # 'address_line2',
+            # 'city',
+            # 'state_or_territory',
+            # 'zipcode',
+            # 'fax',
+            #       )
 
-            if commit:
-                user.save()
-
-            return user
+class PasswordResetForm(UserCreationForm):
 
 
+    class Meta:
+        Model= User
+        exclude= ['user',]
 
 
 
@@ -78,6 +81,7 @@ class RequesterForm(forms.ModelForm):
     # city = forms.CharField(label = 'City', max_length=200,)
     # zip = forms.IntegerField(validators=[MaxValueValidator(99999)])
     # fax = forms.IntegerField(required=False)
+
     class Meta:
         model = Requester
         exclude = ['user']
@@ -87,6 +91,10 @@ class RecipientForm(forms.ModelForm):
 
     class Meta:
         model = Recipient
-        # exclude = ['user']
+        exclude = ['user']
         fields = ('__all__') #('user', 'name', 'address_line1', 'address_line2', 'city','state','email', 'zipcode', 'fax')
 
+
+class LoginForm(AuthenticationForm):
+    def confirm_login_allowed(self, user):
+        pass

@@ -4,28 +4,21 @@ from django.urls import path
 
 from . import views
 from django.contrib.auth import views as auth_views
-from django.contrib.auth.views import LoginView, LogoutView
-
-from .views import logoutview
+from django.contrib.auth.views import LogoutView
+from .views import SignUpView
 
 urlpatterns = [
-    path('', views.indexView, name="home"),
+    path('', views.indexView, name='home'),
     path('dashboard/', views.dashboardView, name="dashboard"),
-
-    path('login/', LoginView.as_view(), name="login_url"),
-    path('register/', views.registerView, name="register_url"),
+    path('register/', SignUpView.as_view(), name='register_url'),
+    path('login/', views.loginview, name="login"),
     path('logout/', LogoutView.as_view(), name="logout"),
-    #path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-
     path('register/requester/', views.requesterView, name='requester_url'),
     path('requester/', views.requesterView, name='requester_url'),
-    path('<int:pk>/profile/', views.view_profile.as_view(), name='view_profile'),
-    path('profile/edit/', views.edit_profile, name='edit_profile'),
-
+    path('<int:pk>/profile/', views.ViewProfile.as_view(), name='view_profile'),
+    path('requesterupdate/', views.edit_profile, name='requester_update'),
     path('recipient/', views.recipientView, name='recipient'),
-
-    path('<int:pk>/requesterupdate', views.RequesterUpdate.as_view(), name='requesterupdate'),
-    path('profile/edit/', views.edit_profile)
+    path('password/', views.edit_password, name='password')
 
     # path(
     #     'login/',

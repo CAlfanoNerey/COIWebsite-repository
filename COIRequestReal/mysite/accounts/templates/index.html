@@ -33,9 +33,11 @@
 
 
                 {% if user.is_authenticated %}
-                <li><a href="/accounts/{{ user.id }}/profile/">View Profile</a></li>
-                <li><a href="/accounts/{{user.id}}/requesterupdate">Update Info</a></li>
+                <li><a href='/accounts/{{ user.pk }}/profile'>View Profile</a></li>
+                    <li><a href={% url 'requester_update' %}>Update Info</a></li>
+                <!--li><a href="/accounts/{{user.id}}/requesterupdate">Update Info</a></li-->
                 <li><a href="/accounts/logout/">Logout</a></li>
+                    <li><a href="/accounts/recipient">Draft a request</a></li>
                 {% else %}
                 <li><a href="/accounts/register/">Register</a></li>
                 <li><a href="/accounts/login/">Login</a></li>
@@ -58,7 +60,7 @@
                 <a href="{% url 'requester_url' %}">Setup</a>
                 {% else %}
                 <h1>Welcome Home, from Homepage</h1>
-                <a href="{% url 'login_url' %}">Login</a>
+                <a href="{% url 'login' %}">Login</a>
                 <a href="{% url 'register_url' %}">Register</a>
 
 
