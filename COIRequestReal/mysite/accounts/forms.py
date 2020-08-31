@@ -66,12 +66,27 @@ class RegistrationForm(UserCreationForm):
             # 'fax',
             #       )
 
-class PasswordResetForm(UserCreationForm):
+class UpdatePasswordForm(UserCreationForm):
 
 
     class Meta:
-        Model= User
-        exclude= ['user',]
+
+        model= User
+        exclude= [
+            'name',
+            'first_name',
+            'last_name',
+            'email',
+            'address_line1',
+            'address_line2',
+            'city',
+            'state_or_territory',
+            'zipcode',
+            'fax',
+            'last_login', 'is_superuser', 'is_staff', 'is_active', 'user_permissions', 'date_joined', 'groups',
+            'password',
+            'username'
+        ]
 
 
 

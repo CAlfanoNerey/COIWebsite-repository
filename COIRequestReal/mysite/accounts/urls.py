@@ -18,7 +18,8 @@ urlpatterns = [
     path('<int:pk>/profile/', views.ViewProfile.as_view(), name='view_profile'),
     path('requesterupdate/', views.edit_profile, name='requester_update'),
     path('recipient/', views.recipientView, name='recipient'),
-    path('password/', views.edit_password, name='password')
+    path('password/', views.edit_password, name='password'),
+    path('<int:pk>/viewdoc/', views.viewdoc.as_view(), name='viewdoc')
 
     # path(
     #     'login/',

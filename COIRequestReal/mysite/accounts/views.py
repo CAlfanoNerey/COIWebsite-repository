@@ -1,17 +1,23 @@
+from io import BytesIO
+
 from django.contrib.auth import authenticate, login
 
 from django.db.backends.utils import logger
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.template.loader import get_template
 from django.urls import reverse, reverse_lazy
-from django.views import generic
+from django.views import generic, View
 from django.views.generic import ListView
+from xhtml2pdf import pisa
 
-from .forms import RequesterForm, RecipientForm, RegistrationForm, RegisterUpdateForm
+from .forms import RequesterForm, RecipientForm, RegistrationForm, RegisterUpdateForm, UpdatePasswordForm
 
 from django.views.generic.edit import CreateView, UpdateView
 from .models import Recipient, Requester, User
+
 
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import UserChangeForm
@@ -20,6 +26,27 @@ from django.contrib.auth import views as auth_views
 # Create your views here.
 def indexView(request):
     return render(request, 'index.html')
+
+class viewdoc(generic.DetailView):
+    model = User
+
+    template_name = 'COIDoc.html'
+
+
+
+
+
+data = {
+
+}
+
+# opens up page as PDF
+class ViewPDF(View):
+
+    def get(self, request, *args, **kwargs):
+        pdf = render_to_pdf('accounts/COIDoc.html',data)
+        return HttpResponse(pdf, content_type='application/pdf')
+
 
 
 @login_required()
@@ -96,27 +123,56 @@ def edit_profile(request):
         return render(request, 'edit_profile.html', args)
 
 
+@login_required()
 def edit_password(request):
     if request.method == 'POST':
-        form= RegisterUpdateForm(request.POST, instance= request.user)
+        form= UpdatePasswordForm(request.POST, instance= request.user)
         if form.is_valid():
             form.save()
             return redirect('view_profile', pk=request.user.pk)
     else:
-        form=RegisterUpdateForm()
+        form= UpdatePasswordForm()
         args={'form': form}
         return render(request, 'password.html', args)
 
 
 
 
+def dictcreate(request):
+    context_dict = {
+        'user': request.self.user.name,
+        'business': 'staffing advantage llc',
+        'email': request.self.email,
+        'company address1': request.self.user.address_line1,
+        'address2': request.self.user.address_line2,
+        'city': request.self.user.city,
+        'state': request.self.user.state_or_territory,
+        'zipcode': request.self.user.zipcode,
+    }
+    return context_dict
+
+
+
+
+
+
+ def render_to_pdf(template_src, context_dict={}, request):
+    template = get_template('COIDoc.html')
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='applicaiton/pdf')
+    return None
+
+
 @login_required()
-def recipientView(request ):
+def recipientView(request):
     # context= {}
     # form = RequesterForm(request.POST)
     # context['form'] = form
 
-    args = {'user': request.user}
+    #args = {'user': request.user}
 
     if request.method == "POST":
 
@@ -124,10 +180,25 @@ def recipientView(request ):
         form = RecipientForm(request.POST)
         form.instance.user = request.user
         context['form'] = form
+
+
         if form.is_valid():
 
             form.save()
-            return redirect('home')
+
+
+
+            template = get_template('COIDoc.html')
+            html = template.render(context_dict)
+            result = BytesIO()
+            pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+            if not pdf.err:
+                pdf =  HttpResponse(result.getvalue(), content_type='applicaiton/pdf')
+                return HttpResponse(pdf, content_type='application/pdf')
+            return None
+
+
+            #return redirect('home')
     else:
         form = RecipientForm()
     return render(request, 'recipient.html', {'form': form}, )
@@ -166,6 +237,11 @@ def loginview(request):
 
         form = AuthenticationForm()
     return render(request, 'registration/login.html', {'form': form}, )
+
+
+
+
+
 
 
 
