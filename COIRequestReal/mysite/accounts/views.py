@@ -1,3 +1,4 @@
+import datetime
 from io import BytesIO
 
 from django.contrib.auth import authenticate, login
@@ -24,6 +25,9 @@ from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import views as auth_views
 
 # Create your views here.
+from .utils import render_to_pdf
+
+
 def indexView(request):
     return render(request, 'index.html')
 
@@ -33,20 +37,41 @@ class viewdoc(generic.DetailView):
     template_name = 'COIDoc.html'
 
 
-
-
-
-data = {
-
-}
-
-# opens up page as PDF
-class ViewPDF(View):
-
+class GeneratePdf(View):
     def get(self, request, *args, **kwargs):
-        pdf = render_to_pdf('accounts/COIDoc.html',data)
+
+
+
+        data = {
+            'user' : request.user.name,
+            'address1': AddressLine1
+        }
+        pdf = render_to_pdf('COIDoc.html', data)
         return HttpResponse(pdf, content_type='application/pdf')
 
+
+
+class GeneratePDF(View):
+    def get(self, request, *args, **kwargs):
+        template = get_template('invoice.html')
+        context = {
+            "invoice_id": 123,
+            "customer_name": "John Cooper",
+            "amount": 1399.99,
+            "today": "Today",
+        }
+        html = template.render(context)
+        pdf = render_to_pdf('invoice.html', context)
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Invoice_%s.pdf" %("12341231")
+            content = "inline; filename='%s'" %(filename)
+            download = request.GET.get("download")
+            if download:
+                content = "attachment; filename='%s'" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
 
 
 @login_required()
@@ -138,32 +163,8 @@ def edit_password(request):
 
 
 
-def dictcreate(request):
-    context_dict = {
-        'user': request.self.user.name,
-        'business': 'staffing advantage llc',
-        'email': request.self.email,
-        'company address1': request.self.user.address_line1,
-        'address2': request.self.user.address_line2,
-        'city': request.self.user.city,
-        'state': request.self.user.state_or_territory,
-        'zipcode': request.self.user.zipcode,
-    }
-    return context_dict
 
 
-
-
-
-
- def render_to_pdf(template_src, context_dict={}, request):
-    template = get_template('COIDoc.html')
-    html = template.render(context_dict)
-    result = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
-    if not pdf.err:
-        return HttpResponse(result.getvalue(), content_type='applicaiton/pdf')
-    return None
 
 
 @login_required()
@@ -185,20 +186,7 @@ def recipientView(request):
         if form.is_valid():
 
             form.save()
-
-
-
-            template = get_template('COIDoc.html')
-            html = template.render(context_dict)
-            result = BytesIO()
-            pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
-            if not pdf.err:
-                pdf =  HttpResponse(result.getvalue(), content_type='applicaiton/pdf')
-                return HttpResponse(pdf, content_type='application/pdf')
-            return None
-
-
-            #return redirect('home')
+            return redirect('home')
     else:
         form = RecipientForm()
     return render(request, 'recipient.html', {'form': form}, )
