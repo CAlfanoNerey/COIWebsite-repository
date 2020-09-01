@@ -2,7 +2,7 @@ from django import forms
 #from django.contrib.auth import models
 from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, UserCreationForm
 from django.core.exceptions import ValidationError
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator, RegexValidator
 
 from .models import Requester, Recipient, User
 
@@ -28,6 +28,8 @@ class RegisterUpdateForm(UserChangeForm):
 
 
 class RegistrationForm(UserCreationForm):
+    username = forms.CharField()
+    #validators = [RegexValidator('^(\w+\d+|\d+\w+)+$', message="Password should be a combination of Alphabets and Numbers")]
     email = forms.EmailField(required = True)
     # error_messages = {
     #     'password_mismatch': "The two password fields didn't match.",

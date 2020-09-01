@@ -39,12 +39,15 @@ class viewdoc(generic.DetailView):
 
 class GeneratePdf(View):
     def get(self, request, *args, **kwargs):
+        user = request.user
 
 
-
+        userdisplay = User.objects.get(id = user.id)
+        recipientdisplay = Recipient.objects.get(user_id = user.id)
         data = {
-            'user' : request.user.name,
-            'address1': AddressLine1
+            # 'user' : request.user.name,
+            'user': userdisplay,
+            'recipient': recipientdisplay
         }
         pdf = render_to_pdf('COIDoc.html', data)
         return HttpResponse(pdf, content_type='application/pdf')
