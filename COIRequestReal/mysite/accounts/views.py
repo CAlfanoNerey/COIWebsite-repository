@@ -34,7 +34,7 @@ def indexView(request):
 class viewdoc(generic.DetailView):
     model = User
 
-    template_name = 'COIDoc.html'
+    template_name = 'COIDoc2.html'
 
 
 class GeneratePdf(View):
@@ -43,7 +43,7 @@ class GeneratePdf(View):
 
 
         userdisplay = User.objects.get(id = user.id)
-        recipientdisplay = Recipient.objects.get(user_id = user.id)
+        recipientdisplay = Recipient.objects.get(user_id=user.id)
         data = {
             # 'user' : request.user.name,
             'user': userdisplay,

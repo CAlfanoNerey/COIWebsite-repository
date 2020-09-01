@@ -1,10 +1,15 @@
 
 <title>Profile</title>
 {% extends 'index.html' %}
+{%block home%}
 
-<div class="container">
+{% endblock %}
+
     {% block content %}
-        <h1>Profile</h1>
+<div class="container">
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Profile</h2>
+    <br>
+    <br>
         <p>Username: {{user}}</p>
         <p>First name: {{user.first_name}}</p>
         <p>Last name: {{user.last_name}}</p>
@@ -16,9 +21,10 @@
         <p>Zip Code: {{user.zipcode}}</p>
         <p>Fax: {{user.fax}}</p>
 
+    </div>
 {% endblock %}
 
-</div>
+
 
 
 

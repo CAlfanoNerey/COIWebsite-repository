@@ -19,6 +19,7 @@ urlpatterns = [
     path('requesterupdate/', views.edit_profile, name='requester_update'),
     path('recipient/', views.recipientView, name='recipient'),
     path('password/', views.edit_password, name='password'),
+    #path('<int:pk>/viewdoc/', views.viewdoc, name='viewdoc')
     path('<int:pk>/viewdoc/', views.GeneratePdf.as_view(), name='viewdoc')
 
     # path(
