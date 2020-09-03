@@ -32,10 +32,37 @@ def indexView(request):
     return render(request, 'index.html')
 
 class viewdoc(generic.DetailView):
-    model = User
+    model = Recipient
 
     template_name = 'COIDoc2.html'
 
+
+class CertHolderView(View):
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        userdisplay = User.objects.all()
+        recipientdisplay = Recipient.objects.all().filter(user_id = user)
+
+        # data = {
+        #     # 'user' : request.user.name,
+        #     'user': userdisplay,
+        #     'recipient': recipientdisplay
+        # }
+
+
+        return render(request, 'certholder.html', {
+            'user': userdisplay,
+            'recipient': recipientdisplay,
+            'error_message': "You didn't select a choice.",
+        })
+        template_name = 'certholder.html'
+        return render(request, template_name,data)
+
+# class CertHolderView(ListView):
+#     def get(self, request, *args, **kwargs):
+#         user = request.user
+#         queryset = Recipient.objects.filter(user_id = user)
+#         return render(request,queryset)
 
 class GeneratePdf(View):
     def get(self, request, *args, **kwargs):
@@ -43,7 +70,7 @@ class GeneratePdf(View):
 
 
         userdisplay = User.objects.get(id = user.id)
-        recipientdisplay = Recipient.objects.get(user_id=user.id)
+        recipientdisplay = Recipient.objects.get(id=self.kwargs['pk'])
         data = {
             # 'user' : request.user.name,
             'user': userdisplay,

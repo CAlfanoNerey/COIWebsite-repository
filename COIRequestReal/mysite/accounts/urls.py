@@ -20,6 +20,7 @@ urlpatterns = [
     path('recipient/', views.recipientView, name='recipient'),
     path('password/', views.edit_password, name='password'),
     #path('<int:pk>/viewdoc/', views.viewdoc, name='viewdoc')
+    path('<int:pk>/certholder/', views.CertHolderView.as_view(), name='certholder'),
     path('<int:pk>/viewdoc/', views.GeneratePdf.as_view(), name='viewdoc')
 
     # path(
