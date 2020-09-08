@@ -32,28 +32,47 @@
             <ul class="nav navbar-nav navbar-left">
 
 
-                {% if user.is_authenticated %}
-                <li><a href='/accounts/{{ user.pk }}/profile'>View Profile</a></li>
-                    <li><a href={% url 'requester_update' %}>Update Info</a></li>
-                <!--li><a href="/accounts/{{user.id}}/requesterupdate">Update Info</a></li-->
-                <li><a href="/accounts/logout/">Logout</a></li>
-                    <li><a href="/accounts/recipient">Draft a request</a></li>
-                <li><a href="/accounts/{{user.pk}}/certholder">View Forms</a></li>
-                {% else %}
-                <li><a href="/accounts/register/">Register</a></li>
-                <li><a href="/accounts/login/">Login</a></li>
-                {% endif %}
+<!--                {% if user.is_authenticated %}-->
+<!--                <li><a href='/accounts/{{ user.pk }}/profile'>View Profile</a></li>-->
+
+<!--                &lt;!&ndash;li><a href="/accounts/{{user.id}}/requesterupdate">Update Info</a></li&ndash;&gt;-->
+<!--                <li><a href="/accounts/logout/">Logout</a></li>-->
+<!--                    <li><a href="/accounts/recipient">Draft a request</a></li>-->
+<!--                <li><a href="/accounts/{{user.pk}}/certholder">View Forms</a></li>-->
+<!--                {% else %}-->
+<!--                <li><a href="/accounts/register/">Register</a></li>-->
+<!--                <li><a href="/accounts/login/">Login</a></li>-->
+<!--                {% endif %}-->
             </ul>
           </div><!--/.nav-collapse -->
+
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">Draft Request</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">Contact</a></li>
+                        {% if user.is_authenticated %}
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/accounts/{{ user.pk }}/profile">Profile</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url 'accounts:requester_update' %}">Update Info</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/accounts/requester/">Requester</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/accounts/recipient">Recipient</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/accounts/rChoose">View Forms</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/accounts/logout/">Logout</a></li>
+<!--                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">Contact</a></li>-->
+                        {% else %}
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/accounts/register/">Register</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/accounts/login/">login</a></li>
+                        {% endif %}
                     </ul>
                 </div>
+
+
             </div>
         </nav>
+        {% block navbar %}
+
+        {% endblock %}
         <!-- Masthead-->
+        {% block jumbotron %}
+
+        {% endblock %}
         {% block home %}
         <header class="masthead bg-primary text-white text-center">
             <div class="container d-flex align-items-center flex-column">
@@ -161,11 +180,10 @@
                     </div>
                     <!-- Footer About Text-->
                     <div class="col-lg-4">
-                        <h4 class="text-uppercase mb-4">About Freelancer</h4>
+                        <h4 class="text-uppercase mb-4">About COI Requests</h4>
                         <p class="lead mb-0">
-                            Freelance is a free to use, MIT licensed Bootstrap theme created by
-                            <a href="http://startbootstrap.com">Start Bootstrap</a>
-                            .
+                            COI Requests allows for requesters to generate recipient forms hassle free!
+                            <!-- <a href="http://startbootstrap.com">Start Bootstrap</a> -->
                         </p>
                     </div>
                 </div>
@@ -173,7 +191,7 @@
         </footer>
         <!-- Copyright Section-->
         <div class="copyright py-4 text-center text-white">
-            <div class="container"><small>Copyright © Your Website 2020</small></div>
+            <div class="container"><small>Copyright © COI Requests</small></div>
         </div>
         <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes)-->
         <div class="scroll-to-top d-lg-none position-fixed">

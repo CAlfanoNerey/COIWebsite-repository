@@ -26,45 +26,18 @@
 
     {% block content %}
 <div class="container">
-        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Select Recipient</h2>
-    <style>
-        .column {
-          float: left;
-          padding: 5px;
-        }
-
-        .right {
-          width: 25%;
-        }
-
-        .left {
-          width: 75%;
-        }
-    </style>
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Edit {{requester.name}}'s Profile</h2>
     <br>
     <br>
-<!--        {% for recipient in recipient %}-->
-<!--        <a href="/accounts/{{ recipient.id }}/viewdoc" class="list-group-item list-group-item-action">{{ recipient.name }}</a>-->
-<!--        {% endfor %}-->
+        <form method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button class="btn btn-success" type="submit" name = "button" " >Submit</button>
+        </form>
 
-
-    {% for recipientdisplay in recipientdisplay %}
-        <div class="row">
-        <div class="column left">
-            <a target="_blank" href="{% url 'accounts:viewdoc' requester_pk=cRequester.pk pk=recipientdisplay.pk %}" class="list-group-item list-group-item-action">{{ recipientdisplay.name }}</a>
-        </div>
-        <div class="column right">
-            <a href="{% url 'accounts:editrecipient' pk=recipientdisplay.pk %}" class="list-group-item list-group-item-action">Edit</a>
-        </div>
-            </div>
-        {% endfor %}
-
-    <br>
-        <a class="btn btn-success" name = "button" href="/accounts/recipient">New Recipient</a>
 
     </div>
 {% endblock %}
-
 
 
 

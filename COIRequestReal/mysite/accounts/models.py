@@ -25,9 +25,15 @@ TITLE_STATES = [
 
 ]
 
+class ContactInfo(models.Model):
+    business_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.business_name
+
 
 class Requester(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    business_name = models.ForeignKey(ContactInfo, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     address_line1 = models.CharField(max_length=200)
     address_line2 = models.CharField(blank=True, null=True, max_length=200)
@@ -37,6 +43,11 @@ class Requester(models.Model):
     #zipcode = models.PositiveIntegerField(blank=True, null=True)
     zipcode = models.PositiveIntegerField(validators=[MaxValueValidator(99999)])
     fax = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
 
 
 class User(AbstractUser):
@@ -69,7 +80,9 @@ class UserProfile(models.Model):
 
 class Recipient(models.Model):
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # Requester = models.ForeignKey(Requester, on_delete=models.CASCADE)
+    User = models.ForeignKey(User, on_delete=models.CASCADE)
+
     name = models.CharField(max_length=200)
     address_line1 = models.CharField(max_length=200)
     address_line2 = models.CharField(blank=True, null=True,max_length=200)
@@ -78,6 +91,9 @@ class Recipient(models.Model):
     zipcode = models.PositiveIntegerField(validators=[MaxValueValidator(99999)])
     email = models.CharField(max_length=200)
     fax = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
 
 
